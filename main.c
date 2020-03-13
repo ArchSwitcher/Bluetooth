@@ -9,7 +9,7 @@
 #include "config.h"
 #include "USART_Header_File.h"
 
-#define _XTAL_FREQ 2000000
+#define _XTAL_FREQ 800000
 
 void main()
 {   
@@ -25,7 +25,7 @@ void main()
     {
         data_in = USART_ReceiveChar();  //Recibiendo los valores del bt
         
-        if(data_in=='1')                //comparando
+        if(data_in=='1')                //comparando (SOLO COMPARA CARACTERES!!!)
         {   
             PORTDbits.RD0 = 1;                    /* turn ON LED */
             USART_SendString("LED_ON"); /* send LED ON status to terminal */
