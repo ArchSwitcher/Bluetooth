@@ -1,49 +1,47 @@
-/*
- * File:   main.c
- * Author: dell
- *
- * Created on February 28, 2020, 9:06 PM
+/* Interface HC-05 Bluetooth module with PIC18F4550
+ * http://www.electronicwings.com
  */
 
 
+#include <pic18f4550.h>
 #include <xc.h>
-#include"config.h"
-#include"USART_Header_File.h"
 
-char data;
-void Int_Ext(void);
+#include "config.h"
+#include "USART_Header_File.h"
 
-void main(void) {
-    OSCCON=0x72;
-    ADCON1bits.PCFG = 0b1111;
-    TRISAbits.RA0 = 0;
-    Int_Ext();
+#define _XTAL_FREQ 2000000
+
+void main()
+{   
+    char data_in;               //char(caracter) sera utilizado para la recepcion BT
+    OSCCON=0x72;               //Reloj interno a 8MHZ 0b1110010
     
-    USART_Init(9600);   //Inicializacion del UART A 9600
-    USART_SendString("Hola Mundo"); //ENVIANDO UN HOLA MUNDO
-    __delay_ms(500);
+    TRISDbits.RD0 = 0;         //PUERTO D salida 0 configurada como salida
+    USART_Init(9600);         /* INICIALIZANDO BT A 9600Baudios*/ 
+    __delay_ms(50);             //DELAY para darle tiempo de incio
+    USART_SendString("LED"); /* Eviando para verificar que este bien*/
     
-            while(1){
-                data = USART_ReceiveChar();
-                if (data == 'A'){
-                    PORTAbits.RA0 = ~PORTAbits.RA0;
-                }
-            
-            }
-}
-
-void Int_Ext(void){
-    TRISBbits.RB0 = 1;
-    INTCONbits.INT0IE = 1; // Habilitar INT0 
-    INTCONbits.INT0IF = 0; //FLag 0
-    INTCON2bits.INTEDG0 = 0; //Flanco descendete
-    INTCONbits.GIE = 1;
-}
-
-void __interrupt(low_priority) Interruptions(void){
-    if (INTCONbits.INT0F){
-        PORTAbits.RA0 = ~PORTAbits.RA0;
-        INTCONbits.INT0F = 0;
+    while(1)
+    {
+        data_in = USART_ReceiveChar();  //Recibiendo los valores del bt
+        
+        if(data_in=='1')                //comparando
+        {   
+            PORTDbits.RD0 = 1;                    /* turn ON LED */
+            USART_SendString("LED_ON"); /* send LED ON status to terminal */
+        }
+        else if(data_in=='2')
+                
+        {
+            PORTDbits.RD0 = 0;                    /* turn OFF LED */
+            USART_SendString("LED_OFF");/* send LED ON status to terminal */
+        }
+        else
+        {
+            USART_SendString(" select 1 or 2");/* send msg to select proper option */
+        }
+        __delay_ms(500);
+    
     }
-
+    
 }

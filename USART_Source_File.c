@@ -39,3 +39,9 @@ void USART_SendString(const char *out)
    }
 }
 /*********************************Delay Function********************************/
+void MSdelay(unsigned int val)
+{
+     unsigned int i,j;
+        for(i=0;i<=val;i++)
+            for(j=0;j<81;j++);      /*This count Provide delay of 1 ms for 8MHz Frequency */
+ }

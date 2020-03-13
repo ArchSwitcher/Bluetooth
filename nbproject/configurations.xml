@@ -15,7 +15,6 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>USART_Source_File.c</itemPath>
-      <itemPath>config.c</itemPath>
       <itemPath>main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
